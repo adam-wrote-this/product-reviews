@@ -1,9 +1,25 @@
+'use client'
 import clsx from 'clsx'
-import { useEffect } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { RiCloseLine } from 'react-icons/ri'
 
 const Modal = ({ isOpen, onClose, children }) => {
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    // 设置标志，表示已在客户端渲染
+    setIsClient(true)
+
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isOpen])
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -16,7 +32,7 @@ const Modal = ({ isOpen, onClose, children }) => {
     }
   }, [isOpen])
 
-  if (!isOpen) {
+  if (!isOpen || !isClient) {
     return null
   }
 
